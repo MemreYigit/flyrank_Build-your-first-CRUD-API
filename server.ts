@@ -3,6 +3,27 @@ import express, {type Express, type Request, type Response} from 'express';
 const app: Express = express();
 const port = 3000;
 
+const tasks = [
+  { id: 1, title: 'Task 1', done: false },
+  { id: 2, title: 'Task 2', done: true },
+  { id: 3, title: 'Task 3', done: false },
+]
+
+app.get('/tasks', (req: Request, res: Response) => {
+  res.json(tasks);
+});
+
+app.get('/tasks/:id', (req: Request, res: Response) => {
+  const taskId = parseInt(String(req.params.id), 10);
+  const task = tasks.find(t => t.id === taskId);
+
+  if (!task) {
+    res.status(404).json({ error: 'Task 99 not found' });
+  }
+  
+  res.json(task);
+});
+
 app.get('/', (req: Request, res: Response) => {
   res.json({ name: 'Task API', version: '1.0', endpoints: ["/tasks"] });
 });
