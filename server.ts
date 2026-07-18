@@ -11,38 +11,76 @@ const tasks = [
   { id: 3, title: 'Task 3', done: false },
 ]
 
+// Get all tasks
 app.get('/tasks', (req: Request, res: Response) => {
-  res.json(tasks);
+  return res.json(tasks);
 });
 
+// Get task
 app.get('/tasks/:id', (req: Request, res: Response) => {
   const taskId = parseInt(String(req.params.id), 10);
   const task = tasks.find(t => t.id === taskId);
 
   if (!task) {
-    res.status(404).json({ error: 'Task 99 not found' });
+    return res.status(404).json({ error: `Task ${taskId} not found` });
   }
   
-  res.json(task);
+  return res.json(task);
 });
 
+// Create task
 app.post('/tasks', (req: Request, res: Response) => {
   const title = req.body.title;
   if (!title) {
-    res.status(400).json({ error: 'Title is required' });
+    return res.status(400).json({ error: 'Title is required' });
   }
 
   const newTask = { id: tasks.length + 1, title, done: false };
   tasks.push(newTask);
-  res.status(201).json({ message: 'Task created successfully', task: newTask });
+  return res.status(201).json({ message: 'Task created successfully', task: newTask });
+});
+
+// Update task
+app.put('/tasks/:id', (req: Request, res: Response) => {
+  const taskId = parseInt(String(req.params.id), 10);
+  const task = tasks.find(t => t.id === taskId);
+
+  if (!task) {
+    return res.status(404).json({ error: `Task ${taskId} not found` });
+  }
+
+  const title = req.body.title;
+  const done = req.body.done;
+
+  if (!title || typeof title !== 'string' || done === undefined || typeof done !== 'boolean') {
+    return res.status(400).json({ error: 'Invalid request body' });
+  }
+  
+  task.title = title;
+  task.done = done;
+
+  return res.json({ message: 'Task updated successfully', task });
+});
+
+// Delete task
+app.delete('/tasks/:id', (req: Request, res: Response) => {
+  const taskId = parseInt(String(req.params.id), 10);
+  const task = tasks.find(t => t.id === taskId);
+
+  if (!task) {
+    return res.status(404).json({ error: `Task ${taskId} not found` });
+  }
+
+  tasks.splice(tasks.indexOf(task), 1);
+  return res.json({ message: 'Task deleted successfully', task: task});
 });
 
 app.get('/', (req: Request, res: Response) => {
-  res.json({ name: 'Task API', version: '1.0', endpoints: ["/tasks"] });
+  return res.json({ name: 'Task API', version: '1.0', endpoints: ["/tasks"] });
 });
 
 app.get('/health', (req: Request, res: Response) => {
-  res.json({ status: 'OK' });
+  return res.json({ status: 'OK' });
 });
 
 app.listen(port, () => {
