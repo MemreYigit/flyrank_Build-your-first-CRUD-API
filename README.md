@@ -55,3 +55,19 @@ When I added new tasks and restarted the server, GET /tasks returned only the or
 ## Pagination
 
 Returning the entire dataset on every request doesn't scale — a table with millions of rows would produce a massive, slow response that no client could realistically render or a user could scroll through anyway. Pagination lets clients ask for a small slice at a time (limit/offset), keeping response times fast and memory usage predictable no matter how large the dataset gets.
+
+## AI vs Me
+ 
+**My prompt:** I didn't write the prompt from scratch — I gave the AI context on what the API needed to do, and asked it to help me turn that into a good prompt (something I picked up from Anthropic's prompting course: AI is generally good at writing prompts for itself). Since the task itself was small, one prompt was enough for the AI to generate a full working solution.
+ 
+**Did it run first try?**
+No. The first run failed with a package-related error. On the second attempt, after fixing the dependencies, it ran cleanly and passed all the Stage 4 checkpoint curls.
+ 
+**What did the AI do better — and do I understand it?**
+The AI's version was more complete than mine. I understand most of what it wrote, but there are a few extra things in its code I didn't fully follow — pieces that went beyond what I would have written myself, and beyond what I'd have thought to ask for.
+ 
+**What did it get wrong or quietly add?**
+Nothing broke functionally — all tasks passed — but the AI added a few extra pieces of logic/structure on its own that I hadn't specified and don't fully understand yet. That's the part I still need to dig into rather than just accept.
+ 
+**What did my prompt forget to specify?**
+Because the prompt was AI-assisted and the task was simple, I didn't have to think hard about edge cases myself — which is exactly the gap: I let the AI decide things (like the "extra" logic above) that I never explicitly asked for, instead of specifying them myself.
