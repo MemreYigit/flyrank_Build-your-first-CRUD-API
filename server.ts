@@ -3,13 +3,19 @@ import express, {type Express, type Request, type Response} from 'express';
 const app: Express = express();
 const port = 3000;
 
+const swaggerUi = require('swagger-ui-express');
+const swaggerDocument = require('./openapi.json');
+
 app.use(express.json());
+
+app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 const tasks = [
   { id: 1, title: 'Task 1', done: false },
   { id: 2, title: 'Task 2', done: true },
   { id: 3, title: 'Task 3', done: false },
 ]
+let nextId = 4;
 
 // Get all tasks
 app.get('/tasks', (req: Request, res: Response) => {
@@ -35,7 +41,7 @@ app.post('/tasks', (req: Request, res: Response) => {
     return res.status(400).json({ error: 'Title is required' });
   }
 
-  const newTask = { id: tasks.length + 1, title, done: false };
+  const newTask = { id: nextId++, title, done: false };
   tasks.push(newTask);
   return res.status(201).json({ message: 'Task created successfully', task: newTask });
 });
