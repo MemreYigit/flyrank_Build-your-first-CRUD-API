@@ -3,6 +3,8 @@ import express, {type Express, type Request, type Response} from 'express';
 const app: Express = express();
 const port = 3000;
 
+app.use(express.json());
+
 const tasks = [
   { id: 1, title: 'Task 1', done: false },
   { id: 2, title: 'Task 2', done: true },
@@ -22,6 +24,17 @@ app.get('/tasks/:id', (req: Request, res: Response) => {
   }
   
   res.json(task);
+});
+
+app.post('/tasks', (req: Request, res: Response) => {
+  const title = req.body.title;
+  if (!title) {
+    res.status(400).json({ error: 'Title is required' });
+  }
+
+  const newTask = { id: tasks.length + 1, title, done: false };
+  tasks.push(newTask);
+  res.status(201).json({ message: 'Task created successfully', task: newTask });
 });
 
 app.get('/', (req: Request, res: Response) => {
