@@ -1,0 +1,34 @@
+{
+  "name": "assignment-1",
+  "version": "1.0.0",
+  "description": "In-memory Task Management REST API built with TypeScript, Node.js, Express, and Swagger UI.",
+  "main": "dist/server.js",
+  "scripts": {
+    "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
+    "build": "tsc",
+    "start": "node dist/server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MemreYigit/flyrank_Build-your-first-API-endpoint.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/MemreYigit/flyrank_Build-your-first-API-endpoint/issues"
+  },
+  "homepage": "https://github.com/MemreYigit/flyrank_Build-your-first-API-endpoint#readme",
+  "dependencies": {
+    "express": "^5.2.1",
+    "swagger-ui-express": "^5.0.1"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.6",
+    "@types/node": "^26.1.1",
+    "@types/swagger-ui-express": "^4.1.8",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^7.0.2"
+  }
+}
