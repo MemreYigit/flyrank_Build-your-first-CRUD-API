@@ -47,3 +47,7 @@ Keep-Alive: timeout=5
 Once the server is running, visit `http://localhost:3000/docs` to try out the endpoints interactively.
 
 ![Swagger UI screenshot](./swagger-screenshot.png)
+
+## The Mortality Experiment
+
+When I added new tasks and restarted the server, GET /tasks returned only the original 3 tasks — my additions were gone. This happens because the task list lives only in RAM (the server process's working memory) as a JavaScript array, and RAM is volatile — its contents are wiped the moment the process stops, so nothing survives a restart unless it's written to persistent storage like a disk or database.
