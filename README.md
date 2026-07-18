@@ -51,3 +51,7 @@ Once the server is running, visit `http://localhost:3000/docs` to try out the en
 ## The Mortality Experiment
 
 When I added new tasks and restarted the server, GET /tasks returned only the original 3 tasks — my additions were gone. This happens because the task list lives only in RAM (the server process's working memory) as a JavaScript array, and RAM is volatile — its contents are wiped the moment the process stops, so nothing survives a restart unless it's written to persistent storage like a disk or database.
+
+## Pagination
+
+Returning the entire dataset on every request doesn't scale — a table with millions of rows would produce a massive, slow response that no client could realistically render or a user could scroll through anyway. Pagination lets clients ask for a small slice at a time (limit/offset), keeping response times fast and memory usage predictable no matter how large the dataset gets.

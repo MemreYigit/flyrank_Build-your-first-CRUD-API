@@ -19,10 +19,12 @@ const initialTasks = [
 let tasks = [...initialTasks];
 let nextId = 4;
 
-// Get all tasks extended with done status and search query
+// Get all tasks extended with done status, search query and offset/limit pagination
 app.get('/tasks', (req: Request, res: Response) => {
   const done = req.query.done;
   const search = req.query.search;
+  const offset = req.query.offset;
+  const limit = req.query.limit;
 
   let filteredTasks = tasks;
 
@@ -39,6 +41,24 @@ app.get('/tasks', (req: Request, res: Response) => {
   if (typeof search === 'string' && search.trim().length > 0) {
     filteredTasks = filteredTasks.filter(t => t.title.includes(search));
   }
+
+  let offsetNum = 0;
+  if (offset !== undefined) {
+    offsetNum = parseInt(String(offset), 10);
+    if (isNaN(offsetNum) || offsetNum < 0) {
+      return res.status(400).json({ error: 'Invalid offset query parameter' });
+    }
+  }
+
+  let limitNum = filteredTasks.length;
+  if (limit !== undefined) {
+    limitNum = parseInt(String(limit), 10);
+    if (isNaN(limitNum) || limitNum < 0) {
+      return res.status(400).json({ error: 'Invalid limit query parameter' });
+    }
+  }
+
+  filteredTasks = filteredTasks.slice(offsetNum, offsetNum + limitNum);
 
   return res.json(filteredTasks);
 });
