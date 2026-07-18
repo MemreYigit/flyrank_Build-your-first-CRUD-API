@@ -10,16 +10,37 @@ app.use(express.json());
 
 app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
-const tasks = [
+const initialTasks = [
   { id: 1, title: 'Task 1', done: false },
   { id: 2, title: 'Task 2', done: true },
   { id: 3, title: 'Task 3', done: false },
-]
+];
+
+let tasks = [...initialTasks];
 let nextId = 4;
 
-// Get all tasks
+// Get all tasks extended with done status and search query
 app.get('/tasks', (req: Request, res: Response) => {
-  return res.json(tasks);
+  const done = req.query.done;
+  const search = req.query.search;
+
+  let filteredTasks = tasks;
+
+  if (done === 'true') {
+    filteredTasks = filteredTasks.filter(t => t.done === true);
+  } 
+  else if (done === 'false') {
+    filteredTasks = filteredTasks.filter(t => t.done === false);
+  }
+  else if (done !== undefined) {
+    return res.status(400).json({ error: 'Invalid done query parameter' });
+  }
+
+  if (typeof search === 'string' && search.trim().length > 0) {
+    filteredTasks = filteredTasks.filter(t => t.title.includes(search));
+  }
+
+  return res.json(filteredTasks);
 });
 
 // Get task
@@ -79,6 +100,20 @@ app.delete('/tasks/:id', (req: Request, res: Response) => {
 
   tasks.splice(tasks.indexOf(task), 1);
   return res.json({ message: 'Task deleted successfully', task: task});
+});
+
+app.get('/stats', (req: Request, res: Response) => {
+  const totalTasks = tasks.length;
+  const doneTasks = tasks.filter(t => t.done).length;
+  const openTasks = totalTasks - doneTasks;
+
+  return res.json({total: totalTasks, done: doneTasks, open: openTasks})
+});
+
+app.post('/reset', (req: Request, res: Response) => {
+  tasks = [...initialTasks];
+  nextId = 4;
+  return res.json({ message: 'Tasks reset successfully', tasks });
 });
 
 app.get('/', (req: Request, res: Response) => {
